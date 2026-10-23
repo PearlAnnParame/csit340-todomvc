@@ -3,8 +3,14 @@ import {useState} from 'react';
 function Todos() {
     const[text, setText] = useState('')
     const [todos, setTodos] = useState([])
+    const [filter, setFilter] = useState('All')
     const activeCount = todos.filter((todo) => !todo.completed).length
     const allCompleted = todos.length > 0 && todos.every((todo) => todo.completed)
+    const filteredTodos = todos.filter((todo) => {
+        if (filter === 'Active') return !todo.completed
+        if (filter === 'Completed') return todo.completed
+        return true
+})
 
 function handleSubmit(e) {
     e.preventDefault()
@@ -19,7 +25,7 @@ function handleSubmit(e) {
  
   function handleToggle(id) {
     setTodos(
-      todos.map((todo) =>
+      filteredTodos.map((todo) =>
         todo.id === id ? { ...todo, completed: !todo.completed } : todo
       )
     )
@@ -104,6 +110,7 @@ function handleSubmit(e) {
                 <li>
                 <button
                     type="button"
+                    onClick={() => setFilter('All')}
                     className="cursor-pointer rounded-[3px] border border-[#b83f45]/20 px-[7px] py-[3px]"
                 >
                     All
@@ -112,6 +119,7 @@ function handleSubmit(e) {
                 <li>
                 <button
                     type="button"
+                    onClick={() => setFilter('Active')}
                     className="cursor-pointer rounded-[3px] border border-transparent px-[7px] py-[3px] hover:border-[#b83f45]/10"
                 >
                     Active
@@ -120,9 +128,14 @@ function handleSubmit(e) {
                 <li>
                 <button
                     type="button"
-                    className="cursor-pointer rounded-[3px] border border-transparent px-[7px] py-[3px] hover:border-[#b83f45]/10"
+                    onClick={() => setFilter('Completed')}
+                    className={
+                        filter === 'Completed'
+                        ? 'cursor-pointer rounded-[3px] border border-[#b83f45]/20 px-[7px] py-[3px]'
+                        : 'cursor-pointer rounded-[3px] border border-transparent px-[7px] py-[3px] hover:border-[#b83f45]/10'
+                    }
                 >
-                    Completed
+                Completed
                 </button>
                 </li>
             </ul>
